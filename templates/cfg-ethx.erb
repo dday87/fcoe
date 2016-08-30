@@ -1,0 +1,32 @@
+## Type:       yes/no
+## Default:    no
+# Enable/Disable FCoE service at the Ethernet port
+# Normally set to "yes"
+FCOE_ENABLE="<%= @fcoe_enable %>"
+
+## Type:       yes/no
+## Default:    no
+# Indicate if DCB service is required at the Ethernet port
+# Normally set to "yes"
+DCB_REQUIRED="<%= @dcb_required %>"
+
+## Type:        yes/no
+## Default:     no
+# Indicate if VLAN discovery should be handled by fcoemon
+# Normally set to "yes"
+AUTO_VLAN="<%= @auto_vlan %>"
+
+## Type:        fabric/vn2vn
+## Default:     fabric
+# Indicate the mode of the FCoE operation, either fabric or vn2vn
+# Normally set to "fabric"
+MODE="<%= @fcoe_mode %>"
+
+## Type:        yes/no
+## Default:     no
+# Indicate whether to run a FIP responder for VLAN discovery in vn2vn mode
+<%- if fcoe_mode == 'vn2vn' and fip_resp == 'yes' -%>
+#FIP_RESP="<%= @fip_resp %>"
+<%- else -%>
+FIP_RESP="<%= @fip_resp %>"
+<%- end -%>

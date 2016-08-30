@@ -42,7 +42,18 @@
 #
 # Copyright 2016 Your name here, unless otherwise noted.
 #
-class fcoe {
+class fcoe  (
+  $fcoe_packages           = $fcoe::params::fcoe_packages,
+  $fcoe_service            = $fcoe::params::fcoe_service,
+) inherits fcoe::params {
 
+  service { $fcoe_service:
+    ensure  => 'running',
+    require => Package[$fcoe_service],
+  }
+
+  package { $fcoe_packages:
+    ensure => 'installed',
+  }
 
 }
