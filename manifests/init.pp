@@ -45,11 +45,16 @@
 class fcoe  (
   $fcoe_packages           = $fcoe::params::fcoe_packages,
   $fcoe_service            = $fcoe::params::fcoe_service,
+  $network_service         = $fcoe::params::network_service,
 ) inherits fcoe::params {
 
   service { $fcoe_service:
     ensure  => 'running',
-    require => Package[$fcoe_service],
+    require => Package[$fcoe_packages],
+  }
+
+  service { $network_service:
+    ensure  => 'running',
   }
 
   package { $fcoe_packages:

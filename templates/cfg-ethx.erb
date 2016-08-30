@@ -25,8 +25,8 @@ MODE="<%= @fcoe_mode %>"
 ## Type:        yes/no
 ## Default:     no
 # Indicate whether to run a FIP responder for VLAN discovery in vn2vn mode
-<%- if fcoe_mode == 'vn2vn' and fip_resp == 'yes' -%>
-#FIP_RESP="<%= @fip_resp %>"
-<%- else -%>
+<%- if @fcoe_mode == 'vn2vn' and @fip_resp == 'yes' -%>
 FIP_RESP="<%= @fip_resp %>"
+<%- else -%>
+#FIP_RESP="<%= @fip_resp %>"
 <%- end -%>

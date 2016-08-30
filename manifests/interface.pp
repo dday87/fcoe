@@ -6,6 +6,7 @@ define fcoe::interface(
   $auto_vlan               = $fcoe::params::auto_vlan,
   $fcoe_mode               = $fcoe::params::fcoe_mode,
   $fip_resp                = $fcoe::params::fip_resp,
+  $fcoe_mtu                = $fcoe::params::fcoe_mtu,
 ) {
 
   include fcoe # contains Package['fcoe-utils','lldpad'] and Service['fcoe']
@@ -18,6 +19,16 @@ define fcoe::interface(
     mode    => '0644',
     content => template('fcoe/cfg-ethx.erb'),
     notify  => Service[$fcoe::params::fcoe_service],
+  }
+
+  file { "ifcfg-${fcoe_interface}":
+    ensure  => file,
+    path    => "/etc/sysconfig/network-scripts/ifcfg-${fcoe_interface}",
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    content => template('fcoe/ifcfg-ethx.erb'),
+    notify  => Service[$fcoe::params::network_service],
   }
 
 }
