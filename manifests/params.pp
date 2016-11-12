@@ -9,6 +9,9 @@ class fcoe::params {
   $fcoe_mode               = 'fabric'
   $fip_resp                = 'no'
   $fcoe_mtu                = undef
-  $network_service         = 'network'
+  $network_service         = $facts['os']['family'] ? {
+    'Debian'          => 'networking',
+    default           => 'network',
+  }
 
 }
