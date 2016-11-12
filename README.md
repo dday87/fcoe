@@ -2,78 +2,159 @@
 
 #### Table of Contents
 
-1. [Overview](#overview)
-2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with fcoe](#setup)
+1. [Module Description - What the module does and why it is useful](#module-description)
+2. [Setup - The basics of getting started with fcoe](#setup)
     * [What fcoe affects](#what-fcoe-affects)
     * [Setup requirements](#setup-requirements)
-    * [Beginning with fcoe](#beginning-with-fcoe)
-4. [Usage - Configuration options and additional functionality](#usage)
-5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
-
-## Overview
-
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
+3. [Usage - Configuration options and additional functionality](#usage)
+    * [Parameters (and default values)](#parameters)
+    * [Sample Usage](#sample-usage)
+4. [Limitations and Known Issues](#limitations-and-known-issues)
+5. [Development - Guide for contributing to the module](#development)
+6. [TODO](#TODO)
+7. [Contributors](#contributors)
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
-
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
-
-## Setup
+The fcoe module automates the Configuration and Deployement of Fibre-channel over Ethernet (FCoE) interface(s) on Linux Systems
 
 ### What fcoe affects
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
+* The following FCOE Network Interface Configuration files:  
+_1. /etc/fcoe/cfg-ethX_  
+_2. /etc/sysconfig/network-scripts/ifcfg-ethX_  
 
-### Setup Requirements **OPTIONAL**
+### Setup Requirements
 
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
+fcoe requires:  
 
-### Beginning with fcoe
-
-The very basic steps needed for a user to get the module up and running.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+- pluginsync = true (Puppet Configuration)  
+- puppetlabs/stdlib (>= 4.9.0)
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing
-the fancy stuff with your module here.
+### Parameters
 
-## Reference
+There are 07 main parameters used to control the fcoe behaviours: 
 
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
+**`fcoe_interface`** :  _fcoe Ethernet Interface (ethX)_  
+String that specifies the fcoe Interface Name (not optional). 
 
-## Limitations
+- _default:_   
+-- _**No default parameter, that must be set (example: eth2)**_
 
-This is where you list OS compatibility, version compatibility, etc.
+**`fcoe_enable`** : _Enable/Disable FCoE service at the Ethernet port_  
+String to Enable/Disable FCoE service at the Ethernet port.
+Normally set to "yes"
+- _default:_ _**yes**_
+
+**`dcb_required`** : _Indicate if DCB service is required at the Ethernet port_  
+String to Indicate if DCB service is required at the Ethernet port.
+- _default:_ _**no**_
+
+**`auto_vlan`** : _Indicate if VLAN discovery should be handled by fcoemon_  
+String to Indicate if VLAN discovery should be handled by fcoemon.
+- _default:_ _**yes**_
+
+**`fcoe_mode`** : _Indicate the mode of the FCoE operation, either fabric or vn2vn_  
+String to Indicate the mode of the FCoE operation,  
+either fabric or vn2vn.
+- _default:_ _**fabric**_
+
+**`fip_resp`** : _Indicate whether to run a FIP responder for VLAN discovery in vn2vn mode_  
+String to Indicate whether to run a FIP responder for VLAN discovery in vn2vn mode,  
+- _default:_ _**no**_
+
+**`fcoe_mtu`** : _Settings the default MTU for the FCOE Interface_  
+String to set the default MTU for the FCOE Interface,
+The default value is set as undef (leaving the MTU to its default value),
+This settings affects ifcfg-ethX Interface
+- _default:_ _**undef**_
+
+### Sample Usage
+
+To configure an eth**X** interface by accepting the default values listed above, specify only the fcoe Interface parameter in the fcoe::interface defined type.  
+_As with any defined typed,  this can be evaluated multiple times with different parameters._  
+_The following examples configures both eth2 and eth3 as FCOE Interfaces with default settings:_
+
+```sh
+fcoe::interface { 'eth2':
+    fcoe_interface  => 'eth2',
+}
+fcoe::interface { 'eth2':
+    fcoe_interface  =>'eth3',
+}
+```
+To modify some of the default settings,
+```sh
+fcoe::interface { 'eth2':
+    fcoe_interface  => 'eth2',
+    fcoe_enable     => 'yes',
+    dcb_required    => 'no',
+    auto_vlan       => 'yes',
+    fcoe_mode       => 'fabric',
+    fip_resp        => 'no',
+    fcoe_mtu        => '9000',
+}
+fcoe::interface { 'eth2':
+    fcoe_interface  =>'eth3',
+    fcoe_enable     => 'yes',
+    dcb_required    => 'no',
+    auto_vlan       => 'yes',
+    fcoe_mode       => 'fabric',
+    fip_resp        => 'no',
+    fcoe_mtu        => '9000',
+}
+```
+Below is the same configuration using Hiera and create_resources
+```sh
+  # FCOE
+  # Create a hash from Hiera Data with the FCOE Interfaces
+  $myFcoeIfaces = hiera('fcoe::interface', {})
+  # With Create Resource Converts a hash into a set of resources
+  create_resources('fcoe::interface', $myFcoeIfaces)
+```
+On my Hiera Yaml files,
+```yaml
+---
+fcoe::interface:
+  'eth2':
+    fcoe_interface   : 'eth2'
+    fcoe_enable      : 'yes'
+    dcb_required     : 'no'
+    auto_vlan        : 'yes'
+    fcoe_mode        : 'fabric'
+    fip_resp         : 'no'
+    fcoe_mtu         : '9000'
+  'eth3':
+    fcoe_interface   : 'eth3'
+    fcoe_enable      : 'yes'
+    dcb_required     : 'no'
+    auto_vlan        : 'yes'
+    fcoe_mode        : 'fabric'
+    fip_resp         : 'no'
+    fcoe_mtu         : '9000'
+
+
+```
+
+## Limitations and Known Issues
 
 ## Development
+I happily accept bug reports and pull requests via github,  
+https://github.com/stivesso/fcoe
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
+- Fork it
+- Create a feature branch
+- Write a failing test
+- Write the code to make that test pass
+- Refactor the code
+- Submit a pull request
 
-## Release Notes/Contributors/Etc **Optional**
+## TODO
 
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You may also add any additional sections you feel are
-necessary or important to include here. Please use the `## ` header.
+- Add Support for other OS Family (Debian, SuSe, Solaris...)
+
+## Contributors
+
+- The module is written and being maintained by: [stivesso](https://github.com/stivesso) 
