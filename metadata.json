@@ -1,6 +1,6 @@
 {  
    "name":"stivesso-fcoe",
-   "version":"0.1.0",
+   "version":"0.2.0",
    "author":"stivesso",
    "summary":"Automation of the deployment and configuration of Fibre-channel over Ethernet (FCoE)",
    "license":"Apache-2.0",
