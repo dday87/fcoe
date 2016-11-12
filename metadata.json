@@ -9,7 +9,7 @@
   "issues_url": "https://github.com/stivesso/fcoe/issues",
   "dependencies": [
     {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
-  ]
+  ],
   "tags": ["fcoe"],
   "description": "Puppet module which aims to automatically configure FCOE Interfaces",
   "operatingsystem_support": [
