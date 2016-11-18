@@ -1,5 +1,7 @@
 # fcoe
 
+[![Build Status](https://travis-ci.org/stivesso/fcoe.svg?branch=master)](https://travis-ci.org/stivesso/fcoe)
+
 #### Table of Contents
 
 1. [Module Description - What the module does and why it is useful](#module-description)
