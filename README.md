@@ -1,5 +1,8 @@
 # fcoe
 
+[![Build Status](https://travis-ci.org/stivesso/fcoe.svg?branch=dev)](https://travis-ci.org/stivesso/fcoe)
+[![Coverage Status](https://coveralls.io/repos/github/stivesso/fcoe/badge.svg?branch=dev)](https://coveralls.io/github/stivesso/fcoe?branch=dev)
+
 #### Table of Contents
 
 1. [Module Description - What the module does and why it is useful](#module-description)
