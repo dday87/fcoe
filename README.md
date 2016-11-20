@@ -1,7 +1,7 @@
 # fcoe
 
-[![Build Status](https://travis-ci.org/stivesso/fcoe.svg?branch=dev)](https://travis-ci.org/stivesso/fcoe)
-[![Coverage Status](https://coveralls.io/repos/github/stivesso/fcoe/badge.svg?branch=dev)](https://coveralls.io/github/stivesso/fcoe?branch=dev)
+[![Build Status](https://travis-ci.org/stivesso/fcoe.svg?branch=master)](https://travis-ci.org/stivesso/fcoe)
+[![Coverage Status](https://coveralls.io/repos/github/stivesso/fcoe/badge.svg?branch=master)](https://coveralls.io/github/stivesso/fcoe?branch=master)
 
 #### Table of Contents
 
