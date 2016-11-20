@@ -6,7 +6,7 @@ describe 'fcoe::interface' do
   let :title do
     'fcoe-eth0'
   end
-  let :default_params do
+  let :params do
     {
       :fcoe_interface => 'eth0',
       :fcoe_enable    => 'yes',
@@ -17,17 +17,14 @@ describe 'fcoe::interface' do
       :fcoe_mtu       => '9000',
     }
   end
-  describe 'os-dependent items' do
-    context "on RedHat based systems" do
-      let :default_facts do
-        {
-          :os                     => { :family => 'RedHat', :release => { :major => '7', :minor => '1', :full => '7.1.1503' } },
-          :kernel                 => 'Linux',
-          :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        }
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts.merge({
+          # Any required changed facts
+        })
       end
-      let :params do default_params end
-      let :facts do default_facts end
+
       it { is_expected.to contain_class("fcoe") }
       it { is_expected.to contain_class("fcoe::params") }
       it do
@@ -35,8 +32,18 @@ describe 'fcoe::interface' do
           'owner'   => 'root',
           'group'   => 'root',
           'mode'    => '0644',
+          'content' => /DEVICE=eth0/,
+        )
+      end
+      it do
+        is_expected.to contain_file("cfg-eth0").with(
+          'owner'   => 'root',
+          'group'   => 'root',
+          'mode'    => '0644',
+          'content' => /MODE="fabric"/,
         )
       end
     end
   end
+
 end
