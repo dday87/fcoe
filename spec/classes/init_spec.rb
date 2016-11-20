@@ -1,25 +1,22 @@
 require 'spec_helper'
 describe 'fcoe' do
 
-  let :default_params do
-    {
-      :fcoe_packages     => '["fcoe-utils","lldpad"]',
-      :fcoe_service      => '["fcoe","lldpad"]',
-      :network_service   => 'network',
-    }
-  end
-  describe 'os-dependent items' do
-    context "on RedHat based systems" do
-      let :default_facts do
-        {
-          :os                     => { :family => 'RedHat', :release => { :major => '7', :minor => '1', :full => '7.1.1503' } },
-          :kernel                 => 'Linux',
-          :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        }
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) do
+        facts.merge({
+          # Any required changed facts
+        })
       end
-      let :params do default_params end
-      let :facts do default_facts end
+
       it { is_expected.to contain_class("fcoe") }
+
+      it { is_expected.to contain_package("fcoe-utils") }
+      it { is_expected.to contain_package("lldpad") }
+      it { is_expected.to contain_service("fcoe") }
+      it { is_expected.to contain_service("lldpad") }
+      it { is_expected.to contain_service("network") }
     end
   end
+
 end
