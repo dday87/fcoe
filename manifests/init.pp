@@ -50,17 +50,17 @@ class fcoe  (
 
   service { $fcoe_service:
     ensure  => 'running',
-    enable  => 'true',
+    enable  => true,
     require => Package[$fcoe_packages],
   }
 
   service { $network_service:
     ensure  => 'running',
-    enable  => 'true',
+    enable  => true,
   }
 
   package { $fcoe_packages:
-    ensure => 'installed',
+    ensure  => 'installed',
   }
 
 }
