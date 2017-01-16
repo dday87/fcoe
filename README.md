@@ -84,7 +84,7 @@ _The following examples configures both eth2 and eth3 as FCOE Interfaces with de
 fcoe::interface { 'eth2':
     fcoe_interface  => 'eth2',
 }
-fcoe::interface { 'eth2':
+fcoe::interface { 'eth3':
     fcoe_interface  =>'eth3',
 }
 ```
@@ -99,7 +99,7 @@ fcoe::interface { 'eth2':
     fip_resp        => 'no',
     fcoe_mtu        => '9000',
 }
-fcoe::interface { 'eth2':
+fcoe::interface { 'eth3':
     fcoe_interface  =>'eth3',
     fcoe_enable     => 'yes',
     dcb_required    => 'no',
